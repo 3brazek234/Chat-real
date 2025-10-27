@@ -1,34 +1,19 @@
 const jwt = require("jsonwebtoken");
 
-const JWT_SECRET = process.env.JWT_SECRET;
-
-function authenticateToken(req, res, next) {
+const authenticateToken = (req, res, next) => {
   const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-
+  const token = authHeader && authHeader.startsWith("Bearer ") ? authHeader.slice(7) : null;
   if (token == null) {
-    return res
-      .status(401)
-      .json({
-        success: false,
-        message: "Authentication token required.",
-        data: null,
-      });
+    return res.status(401).json({ error: "Authentication required" });
   }
-
-  jwt.verify(token, JWT_SECRET, (err, user) => {
-    if (err) {
-      return res
-        .status(403)
-        .json({
-          success: false,
-          message: "Invalid or expired token.",
-          data: null,
-        });
-    }
-    req.user = user;
-    next();
-  });
-}
+  try {
+    const decodedToken = jwt.verify(token, process.env.JWT_SECRET);
+    req.userId = decodedToken.id; 
+    req.username = decodedToken.name;
+    next(); 
+  } catch (error) {
+    return res.status(403).json({ error: "Invalid or expired token" });
+  }
+};
 
 module.exports = authenticateToken;
