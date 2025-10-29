@@ -56,18 +56,19 @@ const getConversations = async (req, res) => {
        ORDER BY timestamp DESC) as rn
    FROM messages
    WHERE (sender_id = $1 OR receiver_id = $1)
-     AND (sender_id != receiver_id OR receiver_id IS NULL) -- 🚨 عشان يستثني الشات مع النفس أو شات عام
+     AND (sender_id != receiver_id OR receiver_id IS NULL) 
  )
  SELECT
    uc.chat_partner_id AS id,
    u.name AS name,
    uc.text AS last_message_text,
+   u.avatar_url AS partner_avatar,
    uc.timestamp AS last_message_timestamp
  FROM UserChats uc
  JOIN users u ON uc.chat_partner_id = u.id
  WHERE uc.rn = 1
    AND uc.chat_partner_id IS NOT NULL
-   AND uc.chat_partner_id != $1 -- 🚨 تأكد من عدم عرض المستخدم الحالي كـ "شريك محادثة" لنفسه
+   AND uc.chat_partner_id != $1 
  ORDER BY uc.timestamp DESC;`, // رتب المحادثات بآخر رسالة
       [currentUserId]
     );

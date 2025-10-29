@@ -22,7 +22,8 @@ app.use(express.json());
 
 app.use("/api", require("./routes/auth.routes"));
 app.use("/api", require("./routes/chat.routes"));
-
+app.use("/api", require("./routes/updateProfile.routes"));
+app.use("/api", require("./routes/insights.routes"));
 const server = http.createServer(app);
 
 const io = new Server(server, {
@@ -30,7 +31,7 @@ const io = new Server(server, {
     origin: "http://localhost:3000",
     methods: ["GET", "POST"],
   },
-});
+});   
 
 io.on("connection", (socket) => {
   socket.on("authenticate", async (token) => {

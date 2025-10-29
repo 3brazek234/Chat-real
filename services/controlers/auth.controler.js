@@ -37,7 +37,7 @@ const register = async (req, res) => {
       message: "User registered successfully!",
       data: {
         token,
-        user: { id: user.id, name: user.name, email: user.email },
+        user: { id: user.id, name: user.name, email: user.email, avatar_url: user.avatar_url },
       },
     });
   } catch (error) {
@@ -77,6 +77,7 @@ const login = async (req, res) => {
         id: existUser.rows[0].id,
         email: existUser.rows[0].email,
         name: existUser.rows[0].name,
+        avatar_url: existUser.rows[0].avatar_url,
       },
       process.env.JWT_SECRET,
       { expiresIn: "1h" }
@@ -90,6 +91,7 @@ const login = async (req, res) => {
           id: existUser.rows[0].id,
           name: existUser.rows[0].name,
           email: existUser.rows[0].email,
+          avatar_url: existUser.rows[0].avatar_url,
         },
       },
     });
