@@ -24,6 +24,7 @@ app.use("/api", require("./routes/auth.routes"));
 app.use("/api", require("./routes/chat.routes"));
 app.use("/api", require("./routes/updateProfile.routes"));
 app.use("/api", require("./routes/insights.routes"));
+app.use("/api", require("./routes/users.routes"));
 const server = http.createServer(app);
 
 const io = new Server(server, {
